@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CryptoNova • Learn • Build • Win</title>
+  <meta name="description" content="Independent Web3 researcher & educator. Daily on-chain analysis, DeFi breakdowns, market cycles and actionable insights — no hype, just clarity."/>
+  
+  <link rel="icon" href="https://via.placeholder.com/32/05070f/00c9ff?text=CN" type="image/x-icon"/>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #04060d;
+      --text: #f1f5ff;
+      --text-dim: #8fa3d1;
+      --accent: #00c9ff;
+      --accent-dark: #009acd;
+      --purple: #a14cff;
+      --card: rgba(12, 18, 38, 0.68);
+      --border: rgba(0, 201, 255, 0.09);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    canvas#bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 0 160px;
+      text-align: center;
+    }
+
+    .hero-content { max-width: 920px; margin: 0 auto; }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(4.5rem, 14vw, 11rem);
+      font-weight: 900;
+      letter-spacing: -3px;
+      background: linear-gradient(90deg, #00c9ff, #a14cff, #00c9ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      background-size: 300% 100%;
+      animation: gradientFlow 12s linear infinite;
+      line-height: 0.92;
+      margin-bottom: 24px;
+    }
+
+    @keyframes gradientFlow { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
+
+    .tagline {
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      color: var(--accent);
+      margin: 24px 0 32px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .bio {
+      font-size: 1.28rem;
+      color: #c3d2ff;
+      max-width: 720px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+
+    .bio strong { color: var(--accent); }
+
+    .mission {
+      font-size: 1.05rem;
+      color: #88aaff;
+      font-weight: 500;
+      margin: 0 auto 56px;
+      max-width: 680px;
+      letter-spacing: 0.5px;
+    }
+
+    .cta-group {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 16px 40px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      text-decoration: none;
+      transition: all 0.35s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #00c9ff, #009acd);
+      color: #0a1325;
+      box-shadow: 0 10px 30px rgba(0,201,255,0.35);
+    }
+
+    .btn-primary:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,201,255,0.55); }
+
+    .btn-outline {
+      border: 2px solid var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-outline:hover { background: rgba(0,201,255,0.08); transform: translateY(-3px); }
+
+    section {
+      padding: 120px 0;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease-out;
+    }
+
+    section.visible { opacity: 1; transform: translateY(0); }
+
+    h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2.6rem, 7vw, 4.5rem);
+      text-align: center;
+      margin-bottom: 60px;
+      background: linear-gradient(90deg, var(--accent), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 32px;
+    }
+
+    .card {
+      background: var(--card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px 28px;
+      transition: all 0.4s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-12px);
+      border-color: var(--accent);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.45), 0 0 40px rgba(0,201,255,0.15);
+    }
+
+    .card h3 { color: var(--accent); font-size: 1.65rem; margin-bottom: 16px; }
+
+    .value-points {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 32px 48px;
+      margin: 60px 0;
+      font-size: 1.1rem;
+      color: var(--text-dim);
+      text-align: center;
+    }
+
+    .value-point strong { color: var(--accent); display: block; font-size: 1.8rem; margin-bottom: 8px; }
+
+    footer {
+      text-align: center;
+      padding: 100px 0 60px;
+      color: var(--text-dim);
+      border-top: 1px solid rgba(0,201,255,0.08);
+    }
+    .profile-img {
+    width: 160px;          /* ← change this number for width/height */
+    height: 160px;         /* keep equal for perfect circle */
+    min-width: 120px;      /* optional: minimum size on small screens */
+    min-height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--accent);
+    box-shadow: 0 0 30px rgba(0,201,255,0.4);
+    transition: all 0.4s ease;
+}
+
+.profile-img:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 50px rgba(0,201,255,0.6);
+}
+
+/* Mobile adjustment */
+@media (max-width: 768px) {
+    .profile-img {
+        width: 130px;
+        height: 130px;
+        border-width: 3px;
+    }
+}
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin: 32px 0 48px;
+      font-size: 2rem;
+    }
+
+    .social-links a { color: var(--text-dim); transition: all 0.3s; }
+
+    .social-links a:hover { color: var(--accent); transform: translateY(-4px); }
+
+    #back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: rgba(0,201,255,0.2);
+      color: var(--accent);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s;
+      z-index: 100;
+    }
+
+    #back-to-top.visible { opacity: 1; visibility: visible; }
+
+    @media (max-width: 768px) {
+      header { padding: 80px 0 120px; min-height: 90vh; }
+      h1 { font-size: clamp(4rem, 13vw, 8rem); }
+      section { padding: 80px 0; }
+      .value-points { flex-direction: column; gap: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="bg-canvas"></canvas>
+
+  <header>
+    <div class="container">
+      <div class="hero-content">
+        <img 
+          class="profile-img"
+          src="https://thumbs.dreamstime.com/b/futuristic-cyberpunk-ai-face-neon-lights-suitable-wide-range-uses-372599365.jpg" 
+          alt="Ruach - CryptoNova Creator>
+    "</div>
+        </div>
+    <div class="container">
+      <div class="hero-content">
+        <h1>CryptoNova</h1>
+        <div class="tagline">LEARN • BUILD • WIN</div>
+
+        <p class="bio">
+          Independent <strong>Web3 researcher</strong> & educator • Daily breakdowns of on-chain data, DeFi mechanics, market cycles, and asymmetric opportunities.<br><br>
+          Former TradFi analyst turned full-time crypto native • Focused on turning complex systems into <strong>actionable intelligence</strong> for builders and long-term holders.<br><br>
+          Not here for short-term pumps — committed to helping serious participants understand the game, stack real knowledge, and position ahead of the curve.
+        </p>
+
+        <p class="mission">
+          Building in public since early 2025 • Sharing alpha without the noise • Long-term orientation
+        </p>
+
+        <div class="cta-group">
+          <a href="https://x.com/cryptoNovambl" target="_blank" class="btn btn-primary">
+            Follow on X →
+          </a>
+          <a href="#connect" class="btn btn-outline">
+            Let's connect
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="value">
+    <div class="container">
+      <h2>What You'll Get Here</h2>
+      <div class="card-grid">
+        <div class="card">
+          <h3>Crypto & Web3 Alpha</h3>
+          <p>Clear breakdowns of DeFi protocols, Layer 2 scaling, on-chain forensics, airdrop strategies, memecoin meta & macro cycles — real insights, zero fluff.</p>
+        </div>
+        <div class="card">
+          <h3>Hustle & Mental Edge</h3>
+          <p>Discipline frameworks, consistency systems, building in public, handling drawdowns, staying focused when the market tries to break you.</p>
+        </div>
+        <div class="card">
+          <h3>Execution & Positioning</h3>
+          <p>How to convert knowledge → projects, side income, skill stacking, and long-term Web3 positioning that compounds over cycles.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="highlights" style="background: rgba(0,201,255,0.02);">
+    <div class="container">
+      <h2>Daily Value in Numbers</h2>
+      <div class="value-points">
+        <div class="value-point">
+          <strong>Daily</strong>
+          Thread or insight drop
+        </div>
+        <div class="value-point">
+          <strong>2,000+</strong>
+          Community of grinders
+        </div>
+        <div class="value-point">
+          <strong>100%</strong>
+          Independent • NFA
+        </div>
+        <div class="value-point">
+          <strong>On-chain</strong>
+          First perspective
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="featured">
+    <div class="container">
+      <h2>Featured Threads & Drops</h2>
+      <div class="card-grid">
+        <div class="card">
+          <h3>Ultimate Airdrop Farming 2026 Guide</h3>
+          <p>Wallets, tasks, chains, risk management — updated strategies that still print in current meta.</p>
+        </div>
+        <div class="card">
+          <h3>Bear Market Survival Framework</h3>
+          <p>Mindset, capital preservation, opportunity spotting — lessons from past cycles applied today.</p>
+        </div>
+        <div class="card">
+          <h3>Building Your First Web3 Side Project</h3>
+          <p>Idea → MVP → launch → iteration — practical stack & roadmap for 2026.</p>
+        </div>
+      </div>
+      <div style="text-align:center; margin-top:60px;">
+        <a href="https://x.com/cryptoNovambl" target="_blank" class="btn btn-primary" style="padding:18px 48px; font-size:1.15rem;">
+          See all threads on X →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="connect">
+    <div class="container" style="text-align:center;">
+      <h2>Let's Connect & Build</h2>
+      <p style="font-size:1.35rem; margin:40px 0 60px; color:var(--text-dim); max-width:720px; margin-left:auto; margin-right:auto;">
+        Open to DMs for serious questions, collabs, alpha sharing, feedback or just talking markets & mindset.
+      </p>
+
+      <div class="cta-group" style="margin-bottom:60px;">
+        <a href="https://x.com/cryptoNovambl" target="_blank" class="btn btn-primary">
+          Message me on X
+        </a>
+        <a href="mailto:cryptonova@example.com" class="btn btn-outline">
+          Email me directly
+        </a>
+      </div>
+
+      <div class="social-links">
+        <a href="https://x.com/cryptoNovambl" target="_blank">𝕏</a>
+        <!-- Add Telegram / Discord if you have: -->
+        <!-- <a href="#" target="_blank">Telegram</a> -->
+      </div>
+
+      <p style="font-size:1rem; color:var(--text-dim); margin-top:40px;">
+        Response time usually < 24h for genuine convos • Not financial advice
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p style="font-size:1.2rem; margin-bottom:24px;">
+        CryptoNova • For people who grind, learn and win long-term
+      </p>
+      <p style="font-size:0.95rem; opacity:0.8;">
+        © 2025–2026 • Independent views • Not financial advice
+      </p>
+    </div>
+  </footer>
+
+  <a href="#" id="back-to-top">↑</a>
+
+  <script>
+    // Background animation (kept lighter version for performance)
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let w, h;
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const particles = [];
+    const count = Math.min(Math.floor(w * h / 14000), 120);
+
+    class Particle {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * w;
+        this.y = Math.random() * h;
+        this.size = Math.random() * 1.4 + 0.3;
+        this.vx = (Math.random() - 0.5) * 0.2;
+        this.vy = (Math.random() - 0.5) * 0.2;
+        this.opacity = Math.random() * 0.18 + 0.06;
+        this.hue = 190 + Math.random() * 50;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > w) this.vx *= -1;
+        if (this.y < 0 || this.y > h) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${this.hue}, 75%, 68%, ${this.opacity})`;
+        ctx.shadowBlur = 6;
+        ctx.shadowColor = `hsla(${this.hue}, 80%, 65%, 0.22)`;
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < count; i++) particles.push(new Particle());
+
+    function animate() {
+      ctx.fillStyle = 'rgba(4,6,13,0.12)';
+      ctx.fillRect(0,0,w,h);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Section reveal
+    const sections = document.querySelectorAll('section');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.15 });
+    sections.forEach(sec => observer.observe(sec));
+
+    // Back to top button
+    const backToTop = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 600) backToTop.classList.add('visible');
+      else backToTop.classList.remove('visible');
+    });
+  </script>
+
+</body>
+</html>
